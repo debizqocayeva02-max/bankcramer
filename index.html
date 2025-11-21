@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Cramer Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f7fa;
+        }
+        
+        .full-screen-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c 0%, #2c3e50 100%);
+            z-index: -1;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .step-header {
+            margin-bottom: 25px;
+        }
+        
+        .step-header h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .step-header p {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .email-notice {
+            background: #e8f4fd;
+            border: 1px solid #b6e0fe;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+        
+        .email-notice strong {
+            color: #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .code-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .code-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .code-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .code-input.filled {
+            border-color: #2ecc71;
+        }
+        
+        .verify-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        .verify-button:hover {
+            background: #2980b9;
+        }
+        
+        .verify-button:active {
+            transform: translateY(1px);
+        }
+        
+        .verify-button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .step-button {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        
+        .step-button:hover {
+            background: #7f8c8d;
+        }
+        
+        .resend-code {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .resend-code a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .resend-code a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #2ecc71;
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .loading {
+            display: none;
+            margin: 15px 0;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .email-sent-info {
+            background: #e8f6f3;
+            border: 1px solid #a3e4d7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .email-sent-info h4 {
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        
+        .step-navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            .code-input {
+                width: 40px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .step-navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .step-button {
+                width: 100%;
+                margin: 2px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="full-screen-bg"></div>
+    
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+        
+        <!-- Step 1: Reference Number -->
+        <div class="step active" id="step1">
+            <div class="step-header">
+                <h2>Reference Number</h2>
+                <p>Please enter your reference number to continue</p>
+            </div>
+            
+            <form id="referenceForm">
+                <div class="form-group">
+                    <label for="referenceNumber">Reference Number</label>
+                    <input type="text" id="referenceNumber" placeholder="Enter your reference number" required>
+                </div>
+                
+                <button type="submit" class="verify-button">Continue to Email</button>
+                
+                <div class="step-navigation">
+                    <button type="button" class="step-button" onclick="showStep(1)">Step 1</button>
+                    <button type="button" class="step-button" onclick="showStep(2)">Step 2</button>
+                    <button type="button" class="step-button" onclick="showStep(3)">Step 3</button>
+                    <button type="button" class="step-button" onclick="showStep(4)">Step 4</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Step 2: Email Address -->
+        <div class="step" id="step2">
+            <div class="step-header">
+                <h2>Email Address</h2>
+                <p>Please enter your email address to receive the verification code</p>
+            </div>
+            
+            <div class="email-notice">
+                The verification code will be sent from <strong>info@bankcramer.com</strong>
+            </div>
+            
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
+                </div>
+                
+                <div class="loading" id="emailLoading">
+                    <div class="loading-spinner"></div>
+                    <p>Sending verification code...</p>
+                </div>
+                
+                <button type="submit" class="verify-button" id="sendCodeButton">Send Code</button>
+                
+                <div class="step-navigation">
+                    <button type="button" class="step-button" onclick="showStep(1)">Step 1</button>
+                    <button type="button" class="step-button" onclick="showStep(2)">Step 2</button>
+                    <button type="button" class="step-button" onclick="showStep(3)">Step 3</button>
+                    <button type="button" class="step-button" onclick="showStep(4)">Step 4</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Step 3: Verification Code -->
+        <div class="step" id="step3">
+            <div class="step-header">
+                <h2>Verification Code</h2>
+                <p>Please enter the 6-digit code sent to your email</p>
+            </div>
+            
+            <div class="email-sent-info">
+                <h4>✓ Verification code sent!</h4>
+                <p>We've sent a 6-digit verification code from <strong>info@bankcramer.com</strong> to:</p>
+                <p><strong id="userEmailDisplay"></strong></p>
+                <p style="margin-top: 8px; font-size: 12px; color: #7f8c8d;">
+                    Please check your inbox and spam folder
+                </p>
+            </div>
+            
+            <form id="verifyForm">
+                <div class="code-inputs">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                </div>
+                
+                <div class="error-message" id="errorMessage">
+                    Invalid code. Please try again.
+                </div>
+                
+                <button type="submit" class="verify-button">Verify Code</button>
+                
+                <div class="resend-code">
+                    Didn't receive the code? <a href="#" id="resendLink">Resend Code</a>
+                </div>
+                
+                <div class="step-navigation">
+                    <button type="button" class="step-button" onclick="showStep(1)">Step 1</button>
+                    <button type="button" class="step-button" onclick="showStep(2)">Step 2</button>
+                    <button type="button" class="step-button" onclick="showStep(3)">Step 3</button>
+                    <button type="button" class="step-button" onclick="showStep(4)">Step 4</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Step 4: Success -->
+        <div class="step" id="step4">
+            <div class="step-header">
+                <h2>Verification Successful</h2>
+                <p>Your account has been successfully verified</p>
+            </div>
+            
+            <div class="success-message">
+                <p>You will be redirected to your dashboard shortly.</p>
+            </div>
+            
+            <div class="step-navigation">
+                <button type="button" class="step-button" onclick="showStep(1)">Step 1</button>
+                <button type="button" class="step-button" onclick="showStep(2)">Step 2</button>
+                <button type="button" class="step-button" onclick="showStep(3)">Step 3</button>
+                <button type="button" class="step-button" onclick="showStep(4)">Step 4</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentStep = 1;
+        const totalSteps = 4;
+        let userEmail = '';
+        let referenceNumber = '';
+        let verificationCode = '';
+
+        // Show specific step function (global)
+        function showStep(stepNumber) {
+            const steps = document.querySelectorAll('.step');
+            const progressBar = document.getElementById('progressBar');
+            
+            steps.forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            currentStep = stepNumber;
+            
+            // Update progress bar
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Auto-focus first code input when on step 3
+            if (stepNumber === 3) {
+                const codeInputs = document.querySelectorAll('.code-input');
+                if (codeInputs.length > 0) {
+                    codeInputs[0].focus();
+                }
+            }
+        }
+
+        // Generate random verification code
+        function generateVerificationCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Send email using Netlify Function
+        async function sendVerificationEmail(email, code, reference) {
+            try {
+                // Netlify Functions endpoint - bu URL'yi Netlify deploy ettikten sonra alacaksınız
+                const response = await fetch('/.netlify/functions/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: email,
+                        code: code,
+                        reference: reference
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error sending email:', error);
+                return { success: false, message: 'Network error: ' + error.message };
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const referenceForm = document.getElementById('referenceForm');
+            const emailForm = document.getElementById('emailForm');
+            const verifyForm = document.getElementById('verifyForm');
+            const resendLink = document.getElementById('resendLink');
+            const errorMessage = document.getElementById('errorMessage');
+            const codeInputs = document.querySelectorAll('.code-input');
+            const emailLoading = document.getElementById('emailLoading');
+            const sendCodeButton = document.getElementById('sendCodeButton');
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            
+            // Initialize progress bar
+            updateProgress();
+            
+            // Reference number form submission
+            referenceForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                referenceNumber = document.getElementById('referenceNumber').value;
+                
+                if (referenceNumber.trim() !== '') {
+                    showStep(2);
+                }
+            });
+            
+            // Email form submission
+            emailForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                userEmail = document.getElementById('email').value;
+                
+                if (userEmail.trim() !== '' && isValidEmail(userEmail)) {
+                    // Show loading state
+                    emailLoading.style.display = 'block';
+                    sendCodeButton.disabled = true;
+                    sendCodeButton.textContent = 'Sending...';
+                    
+                    try {
+                        // Generate verification code
+                        verificationCode = generateVerificationCode();
+                        
+                        // Send real email using Netlify Function
+                        const emailResult = await sendVerificationEmail(
+                            userEmail, 
+                            verificationCode, 
+                            referenceNumber
+                        );
+                        
+                        if (emailResult.success) {
+                            // Email sent successfully
+                            userEmailDisplay.textContent = userEmail;
+                            showStep(3);
+                        } else {
+                            alert('Failed to send verification code: ' + emailResult.message);
+                        }
+                    } catch (error) {
+                        alert('Error sending verification code. Please try again.');
+                        console.error('Error:', error);
+                    } finally {
+                        // Hide loading state
+                        emailLoading.style.display = 'none';
+                        sendCodeButton.disabled = false;
+                        sendCodeButton.textContent = 'Send Code';
+                    }
+                }
+            });
+            
+            // Email validation
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Code input auto-focus and navigation
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    if (this.value.length === 1) {
+                        this.classList.add('filled');
+                        if (index < codeInputs.length - 1) {
+                            codeInputs[index + 1].focus();
+                        }
+                    } else {
+                        this.classList.remove('filled');
+                    }
+                });
+                
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // Verification form submission
+            verifyForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let code = '';
+                codeInputs.forEach(input => {
+                    code += input.value;
+                });
+                
+                // Check if the entered code matches
+                if (code === verificationCode) {
+                    // Successful verification
+                    errorMessage.style.display = 'none';
+                    showStep(4);
+                    
+                    // Simulate redirect after successful verification
+                    setTimeout(() => {
+                        alert('Verification successful!');
+                    }, 1000);
+                } else {
+                    // Error case
+                    errorMessage.textContent = 'Invalid code. Please try again.';
+                    errorMessage.style.display = 'block';
+                    codeInputs.forEach(input => {
+                        input.classList.add('error');
+                    });
+                }
+            });
+            
+            // Resend code
+            resendLink.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                try {
+                    // Generate new verification code
+                    verificationCode = generateVerificationCode();
+                    
+                    // Resend email
+                    const emailResult = await sendVerificationEmail(
+                        userEmail, 
+                        verificationCode, 
+                        referenceNumber
+                    );
+                    
+                    if (emailResult.success) {
+                        alert('A new verification code has been sent to your email.');
+                        
+                        // Clear previous inputs
+                        codeInputs.forEach(input => {
+                            input.value = '';
+                            input.classList.remove('filled', 'error');
+                        });
+                        
+                        // Focus first input
+                        codeInputs[0].focus();
+                        
+                        // Hide error message
+                        errorMessage.style.display = 'none';
+                    } else {
+                        alert('Failed to resend verification code: ' + emailResult.message);
+                    }
+                } catch (error) {
+                    alert('Error resending verification code. Please try again.');
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Update progress bar
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+    </script>
+</body>
+</html>

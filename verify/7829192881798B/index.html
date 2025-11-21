@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cramer Bank | Verification — Modernized</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0f1724;--muted:#9aa4b2;--accent:#4f46e5;--radius:14px;--maxw:1100px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter;background:#071025;color:#e6eef8}
+    
+    .wrap{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:20px;
+    }
+
+    header{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      margin-bottom:20px;
+      gap:6px;
+      text-align:center;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    @media(max-width:768px){
+      .grid{
+        grid-template-columns:1fr;
+        gap:16px;
+      }
+    } 
+
+    .panel{
+      background:rgba(255,255,255,0.03);
+      padding:20px;
+      border-radius:var(--radius);
+    }
+
+    .doc{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:12px;
+      background:rgba(255,255,255,0.02);
+      transition:all 0.3s ease;
+    }
+
+    .doc:hover{
+      background:rgba(255,255,255,0.05);
+      border-color:rgba(255,255,255,0.1);
+    }
+
+    .doc-header{
+      display:flex;
+      align-items:flex-start;
+      gap:14px;
+    }
+
+    .doc-number{
+      font-weight:800;
+      font-size:20px;
+      width:40px;
+      text-align:center;
+    }
+
+    .doc-info h4{margin:0 0 4px 0}
+    .doc-info p{margin:2px 0;color:#9aa4b2;font-size:13px;line-height:1.4}
+
+    .doc-actions{
+      display:flex;
+      gap:10px;
+      margin-top:8px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:8px 14px;
+      border-radius:10px;
+      background:var(--accent);
+      border:0;
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .btn.secondary{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.2);
+      color:var(--muted);
+    }
+
+    .big{height:100%;border-radius:12px;overflow:hidden}
+    iframe{width:100%;height:100%;border:0}
+
+    /* Modern Modal Styles */
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+      padding:20px;
+    }
+
+    .modal.open{display:flex;}
+
+    .modal-content{
+      background:#0f1724;
+      width:90%;
+      max-width:800px;
+      height:85vh;
+      border-radius:16px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 25px 50px rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.1);
+      position:relative;
+    }
+
+    .modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 20px;
+      background:rgba(255,255,255,0.03);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    .modal-title{
+      font-weight:600;
+      color:#e6eef8;
+      font-size:16px;
+      flex:1;
+    }
+
+    .modal-close{
+      background:rgba(255,255,255,0.1);
+      border:0;
+      color:#9aa4b2;
+      font-size:20px;
+      cursor:pointer;
+      width:32px;
+      height:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:8px;
+      transition:all 0.3s ease;
+      font-weight:300;
+    }
+
+    .modal-close:hover{
+      background:rgba(255,255,255,0.2);
+      color:white;
+      transform:scale(1.1);
+    }
+
+    .modal-body{
+      flex:1;
+      display:flex;
+      background:#0a1422;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .modal-body iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      background:white;
+    }
+
+    .logo-header img{
+      height:50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .logo-header img:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    
+    .verification-title{color:#9aa4b2;font-size:16px;margin-top:4px;letter-spacing:0.5px}
+
+    /* PDF Viewer styles - GÜNCELLENDİ */
+    .pdf-container {
+      width:100%;
+      height:600px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.1);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      position: relative;
+    }
+
+    .pdf-viewer {
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#0a1422;
+      position: relative;
+    }
+
+    .pdf-viewer iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      background:white;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* PDF yükleniyor göstergesi */
+    .pdf-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--muted);
+      font-size: 16px;
+      z-index: 1;
+    }
+
+    /* Mobil için iyileştirmeler */
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        height: 90vh;
+        border-radius:12px;
+      }
+      .modal {
+        padding:10px;
+      }
+      
+      /* PDF konteynerini mobilde daha iyi hale getir */
+      .pdf-container {
+        height: 500px; /* Mobilde daha fazla alan kaplasın */
+      }
+      
+      /* PDF görüntüleyici için mobil optimizasyonu */
+      .pdf-viewer iframe {
+        width: 100%;
+        height: 100%;
+      }
+      
+      /* Doküman bilgilerini mobilde daha iyi hale getir */
+      .doc-info p {
+        font-size: 12px;
+        line-height: 1.3;
+      }
+      
+      /* Butonları mobilde daha erişilebilir yap */
+      .btn {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+      
+      /* Başlık bilgisini mobilde optimize et */
+      .verification-title {
+        font-size: 14px;
+        text-align: center;
+        line-height: 1.4;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        width: 98%;
+        height: 85vh;
+      }
+      .modal-header {
+        padding:12px 16px;
+      }
+      
+      /* Daha küçük ekranlar için ek optimizasyonlar */
+      .pdf-container {
+        height: 400px; /* Küçük ekranlarda da iyi görünsün */
+      }
+      
+      .doc-header {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .doc-number {
+        width: 100%;
+        text-align: left;
+      }
+      
+      .doc-actions {
+        justify-content: center;
+      }
+      
+      .wrap {
+        padding: 15px;
+      }
+      
+      .panel {
+        padding: 15px;
+      }
+    }
+
+    /* PDF mobil görüntüleme için ek optimizasyonlar */
+    .pdf-mobile-optimized {
+      -webkit-overflow-scrolling: touch;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="logo-header">
+    <!-- Logoya tıklanabilirlik eklendi -->
+    <a href="https://bankcramer.com" target="_blank" style="text-decoration: none;">
+      <img src="docs/cramer_logo.png" alt="Cramer Bank Logo" title="Go to Cramer Bank Homepage" />
+    </a>
+    <div class="verification-title">Verification: Bank Confirmation Letter (BCL) regarding the under Agreement No. AG/SJU - 004956</div>
+    <div style="color:#9aa4b2;margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <button id="copyBtn" class="btn secondary" style="padding:6px 10px;font-size:13px" onclick="copyRef()">Copy</button>
+      <span id="refText" style="cursor:pointer">Ref: 78207/92899198-B</span>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <main class="panel">
+      <h3>Documents</h3>
+      <div class="doc-list" style="display:flex;flex-direction:column;gap:14px;margin-top:14px">
+
+        <div class="doc">
+          <div class="doc-header">
+            <div class="doc-number"></div>
+            <div class="doc-info">
+              <h4>Document</h4>
+                      <p>To: MMG Group (MMG Bank Corporation) and Multi Group Llc<br>From: Banque Cramer & Cie SA<br>     Reference No.78207/92899198-B<br>Subject: Bank Confirmation Letter (BCL) regarding the blocked funds under<br>Date of issue: 07th of July, 2025.<br>
+            </div>
+          </div>
+          <div class="doc-actions">
+            <button class="btn" onclick="previewPDF('docs/doc5.pdf', 'Document 1 - Loan Agreements')">Preview</button>
+            <button class="btn secondary" onclick="downloadPDF('docs/doc5.pdf')">Download</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <aside class="panel">
+      <h4>PDF Viewer - All Agreements</h4>
+      <div class="pdf-container">
+        <div class="pdf-viewer">
+          <div class="pdf-loading" id="pdfLoading">Loading PDF...</div>
+          <iframe id="pdfViewer" src="docs/doc0.pdf#view=FitH&toolbar=0&navpanes=0&scrollbar=0" class="pdf-mobile-optimized" onload="hideLoading()"></iframe>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Sayfa altı logolar -->
+  <div style="max-width:1100px;margin:40px auto 20px auto;display:flex;justify-content:center;gap:28px;opacity:0.55;flex-wrap:wrap">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style="height:32px" />
+    <img src="https://vectorseek.com/wp-content/uploads/2023/09/Verified-By-Visa-Logo-Vector.svg-.png" alt="Visa Verified" style="height:32px" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" style="height:32px" />
+    <img src="https://www.pngkey.com/png/full/794-7948248_mastercard-securecode-logo-logo-mastercard-secure-code.png" alt="Mastercard Secure" style="height:32px" />
+  </div>
+
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">PDF Preview</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="modalPdf" class="pdf-mobile-optimized"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+// PDF yükleme göstergesini gizleme
+function hideLoading() {
+  const loadingElement = document.getElementById('pdfLoading');
+  if (loadingElement) {
+    loadingElement.style.display = 'none';
+  }
+}
+
+// Sayfa yüklendiğinde PDF'yi optimize et
+document.addEventListener('DOMContentLoaded', function() {
+  // PDF iframe'ini optimize et
+  const pdfViewer = document.getElementById('pdfViewer');
+  if (pdfViewer) {
+    // PDF'nin daha iyi görüntülenmesi için parametreler ekle
+    let currentSrc = pdfViewer.src;
+    if (!currentSrc.includes('view=FitH')) {
+      pdfViewer.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 'view=FitH&toolbar=0&navpanes=0&scrollbar=0';
+    }
+    
+    // Mobil cihazlarda ek optimizasyon
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      pdfViewer.setAttribute('scrolling', 'yes');
+      pdfViewer.style.width = '100%';
+      pdfViewer.style.height = '100%';
+    }
+  }
+  
+  // 2 saniye sonra yükleme göstergesini gizle (güvenlik önlemi)
+  setTimeout(hideLoading, 2000);
+});
+
+function previewPDF(url, title){
+  document.getElementById('modalPdf').src = url + '#view=FitH&toolbar=0&navpanes=0&scrollbar=0';
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modal').classList.add('open');
+  
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('modalPdf').src = '';
+}
+
+function downloadPDF(url){
+  window.location.href = url;
+}
+
+function copyRef(){
+  const text = document.getElementById('refText').innerText.replace('Ref: ','');
+  navigator.clipboard.writeText(text);
+  document.getElementById('copyBtn').innerText = 'Copied ✓';
+  setTimeout(()=>{document.getElementById('copyBtn').innerText = 'Copy';},1500);
+}
+
+// Logo tıklama için alternatif JavaScript fonksiyonu
+function goToHomepage() {
+  window.open('https://bankcramer.com', '_blank');
+}
+</script>
+
+<footer style="text-align:center;padding:20px;color:#9aa4b2;font-size:14px;margin-top:20px">
+  © 2025 All rights reserved. Copyright for this page is fully protected.
+</footer>
+</body>
+</html>

