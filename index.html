@@ -599,11 +599,11 @@ li.wpml-ls-slot-5, li#menu-item-571 {
 
 <div class="elementor-element elementor-element-fe73ddd elementor-nav-menu__align-right cm-over-menu elementor-widget__width-auto elementor-nav-menu--dropdown-none elementor-widget-tablet__width-initial elementor-widget-mobile__width-inherit elementor-widget elementor-widget-nav-menu" data-id="fe73ddd" data-element_type="widget">
     <div class="elementor-widget-container">
-        <div class="verify-menu">
-            <a href="#" onclick="toggleModal(); return false;">VERIFY</a>
-            <a href="https://corporates.cramer-bank.com/index.htm" target="_blank">VERIFY UETR</a>
+<div class="verify-menu">
+    <a href="#" onclick="toggleModal(); return false;">VERIFY</a>
+    <a href="#" onclick="openUetrSearch(); return false;">VERIFY UETR</a>
+</div>
 
-        </div>
     </div>
 </div>
 
@@ -925,6 +925,12 @@ function checkVerification() {
         alert("Invalid verification code.");
     }
 }
+
+	function openUetrSearch() {
+    document.getElementById('uetr').checked = true; 
+    toggleModal(); 
+}
+
 </script>
 
 	
