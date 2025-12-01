@@ -387,6 +387,23 @@
         grid-template-columns: 1fr;
       }
     }
+    
+    .inline-details {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      margin-top: 5px;
+    }
+    
+    .save-results-text {
+      color: #0031cc;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .save-results-text:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -422,174 +439,63 @@
     Enjoy real-time visibility into your cross-border transfers.
   </div>
 
-<style>
-  .search-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .radio-group {
-    display: flex;
-    gap: 20px;
-    margin: 20px 0;
-    justify-content: flex-start; /* Align to the left */
-  }
-  
-  .radio-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #f5f5f5; /* Default gray background */
-    transition: background-color 0.3s;
-  }
-  
-  .radio-option.active {
-    background-color: #f0f8ff; /* Light blue background when active */
-  }
-  
-  .radio-option input[type="radio"] {
-    display: none; /* Hide the actual radio buttons */
-  }
-  
-  .radio-option label {
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .input-group input, 
-  .input-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  #search-btn {
-    background-color: #0066cc;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-  
-  #search-btn:hover {
-    background-color: #0055aa;
-  }
-</style>
+  <!-- Search Form -->
+  <div class="search-container">
+    <div id="searchForm">
+      <h2>Payment Status Search</h2>
+      <h3 style="font-weight: normal;">Please enter your UETR or alternatively your payment details</h3>
+      <h4 style="font-weight: normal; font-style: italic;">All fields are mandatory</h4>
 
-<!-- Centered Search Form -->
-<div class="search-container">
-  <div id="searchForm">
-    <h2>Payment Status Search</h2>
-    <h3 style="font-weight: normal;">Please enter your UETR or alternatively your payment details</h3>
-    <h4 style="font-weight: normal; font-style: italic;">All fields are mandatory</h4>
+      <div class="radio-group">
+        <div class="radio-option active" id="uetr-option">
+          <input type="radio" id="uetr" name="search_type" value="uetr" checked>
+          <label for="uetr">UETR</label>
+        </div>
+        <div class="radio-option" id="payment-details-option">
+          <input type="radio" id="payment_details" name="search_type" value="payment_details">
+          <label for="payment_details">Payment Details</label>
+        </div>
+      </div>
 
-    <div class="radio-group">
-      <div class="radio-option active" id="uetr-option">
-        <input type="radio" id="uetr" name="search_type" value="uetr" checked>
-        <label for="uetr">UETR</label>
+      <div id="uetr-section">
+        <div class="input-group">
+          <label for="uetr_input">UETR</label>
+          <input type="text" id="uetr_input" placeholder="Enter UETR">
+        </div>
       </div>
-      <div class="radio-option" id="payment-details-option">
-        <input type="radio" id="payment_details" name="search_type" value="payment_details">
-        <label for="payment_details">Payment Details</label>
+
+      <div id="payment-details-section" style="display: none;">
+        <div class="input-group">
+          <label for="payment_reference">Payment Reference:</label>
+          <input type="text" id="payment_reference" placeholder="Enter payment reference">
+        </div>
+        
+        <div class="input-group">
+          <label for="payment_date">Payment Date:</label>
+          <input type="date" id="payment_date">
+        </div>
+        
+        <div class="input-group">
+          <label for="instructed_amount">Instructed Amount:</label>
+          <input type="text" id="instructed_amount" placeholder="Enter amount">
+        </div>
+        
+        <div class="input-group">
+          <label for="currency">Currency:</label>
+          <select id="currency">
+            <option value="">Select currency</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="USD">US Dollar (USD)</option>
+            <option value="GBP">British Pound (GBP)</option>
+            <option value="CHF">Swiss Franc (CHF)</option>
+          </select>
+        </div>
       </div>
+
+      <button id="search-btn">Search</button>
     </div>
-
-    <div id="uetr-section">
-      <div class="input-group">
-        <label for="uetr_input">UETR</label>
-        <input type="text" id="uetr_input" placeholder="Enter UETR">
-      </div>
-    </div>
-
-    <div id="payment-details-section" style="display: none;">
-      <div class="input-group">
-        <label for="payment_reference">Payment Reference:</label>
-        <input type="text" id="payment_reference" placeholder="Enter payment reference">
-      </div>
-      
-      <div class="input-group">
-        <label for="payment_date">Payment Date:</label>
-        <input type="date" id="payment_date">
-      </div>
-      
-      <div class="input-group">
-        <label for="instructed_amount">Instructed Amount:</label>
-        <input type="text" id="instructed_amount" placeholder="Enter amount">
-      </div>
-      
-      <div class="input-group">
-        <label for="currency">Currency:</label>
-        <select id="currency">
-          <option value="">Select currency</option>
-          <option value="EUR">Euro (EUR)</option>
-          <option value="USD">US Dollar (USD)</option>
-          <option value="GBP">British Pound (GBP)</option>
-          <option value="CHF">Swiss Franc (CHF)</option>
-        </select>
-      </div>
-    </div>
-
-    <button id="search-btn">Search</button>
   </div>
-</div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const uetrOption = document.getElementById('uetr-option');
-    const paymentDetailsOption = document.getElementById('payment-details-option');
-    const uetrRadio = document.getElementById('uetr');
-    const paymentDetailsRadio = document.getElementById('payment_details');
-    const uetrSection = document.getElementById('uetr-section');
-    const paymentDetailsSection = document.getElementById('payment-details-section');
-    
-    function toggleSections() {
-      if(uetrRadio.checked) {
-        uetrSection.style.display = 'block';
-        paymentDetailsSection.style.display = 'none';
-        uetrOption.classList.add('active');
-        paymentDetailsOption.classList.remove('active');
-      } else {
-        uetrSection.style.display = 'none';
-        paymentDetailsSection.style.display = 'block';
-        uetrOption.classList.remove('active');
-        paymentDetailsOption.classList.add('active');
-      }
-    }
-    
-    uetrOption.addEventListener('click', function() {
-      uetrRadio.checked = true;
-      toggleSections();
-    });
-    
-    paymentDetailsOption.addEventListener('click', function() {
-      paymentDetailsRadio.checked = true;
-      toggleSections();
-    });
-    
-    // Initialize
-    toggleSections();
-  });
-</script>
   <!-- Payment Status Section -->
   <div id="paymentStatus">
     <div class="header-buttons">
@@ -599,11 +505,21 @@
 
     <h2>Search Details</h2>
     <div class="details">
-      <p><strong>UETR:</strong> <span class="uetr" id="status-uetr"></span></p><br>
-      <p class="inline-details">
-        <strong>Instructed Amount:</strong> &nbsp;&nbsp;&nbsp;&nbsp;<strong>Currency:</strong> 
-        &nbsp;&nbsp;&nbsp;&nbsp; <strong>Date:</strong>
-       <p class="inline-details" id="payment-details-text"></p>
+      <p><strong>UETR:</strong> <span class="uetr" id="status-uetr"></span></p>
+      <div class="inline-details">
+        <div>
+          <strong>Instructed Amount:</strong>
+          <p id="status-amount-display"></p>
+        </div>
+        <div>
+          <strong>Currency:</strong>
+          <p id="status-currency-display"></p>
+        </div>
+        <div>
+          <strong>Date:</strong>
+          <p id="status-date-display"></p>
+        </div>
+      </div>
     </div>
 
     <hr />
@@ -634,356 +550,352 @@
 
 <script>
     // Toggle between UETR and Payment Details
-    document.getElementById('uetr').addEventListener('change', function() {
-        document.getElementById('uetr-section').style.display = 'block';
-        document.getElementById('payment-details-section').style.display = 'none';
-    });
-    
-    document.getElementById('payment_details').addEventListener('change', function() {
-        document.getElementById('uetr-section').style.display = 'none';
-        document.getElementById('payment-details-section').style.display = 'block';
-    });
-
-// Show Payment Status on Search
-document.getElementById('search-btn').addEventListener('click', function() {
-    const statusContainer = document.querySelector('.status-visualization-container');
-    statusContainer.innerHTML = '';
-    
-    // UETR search
-    if (document.getElementById('uetr').checked) {
-        const uetrInput = document.getElementById('uetr_input').value.trim();
+    document.addEventListener('DOMContentLoaded', function() {
+        const uetrOption = document.getElementById('uetr-option');
+        const paymentDetailsOption = document.getElementById('payment-details-option');
+        const uetrRadio = document.getElementById('uetr');
+        const paymentDetailsRadio = document.getElementById('payment_details');
+        const uetrSection = document.getElementById('uetr-section');
+        const paymentDetailsSection = document.getElementById('payment-details-section');
         
-        const uetrDetails = {
-            "bcffdc87-7c49-4d38-1785-d5d87de321d7": {
-                template: `
-                    <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Started</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Processed</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Completed</div>
-                        </div>
-                    </div>
-                    <div class="status-message success">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#34c759" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M6.5 11l-3-3 1-1 2 2 5-5 1 1-6 6z"/>
-                        </svg>
-                        Payment credited to beneficiary
-                    </div>
-                `,
-                details: {
-                    amount: "#20,000,000.00#",
-                    currency: "Euro",
-                    date: "01.11.2025",
-                    update: "03-11-2025, 10:19 am",
-                    swiftUrl: "https://verify-swift.com/verification-cob.html"
-                }
-            },
-            
-            "0b99fc6c-c967-4ece-8ff8-5d8a90257c8c": {
-                template: `
-                    <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Started</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle yellow processing">✓</div>
-                            <div class="step-label">Processing</div>
-                        </div>
-                        <div class="connector yellow"></div>
-                        <div class="step">
-                            <div class="circle gray">✓</div>
-                            <div class="step-label">Pending</div>
-                        </div>
-                    </div>
-                    <div class="status-message warning">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffcc00" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                        </svg>
-                        Payment processing - expected within 24 hours
-                    </div>
-                `,
-                details: {
-                    amount: "#20,000,000.00#",
-                    currency: "Euro",
-                    date: "01.12.2025",
-                    update: "01-12-2025, 14:12 pm",
-                    swiftUrl: "https://verify-swift.com/verification-cob.html"
-                }
-            },
-            
-            "bcffdd69-7c49-4d21-6264-d6d67de344d8": {
-                template: `
-                    <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Started</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Processed</div>
-                        </div>
-                        <div class="connector red"></div>
-                        <div class="step">
-                            <div class="circle red">✗</div>
-                            <div class="step-label">Cancelled</div>
-                        </div>
-                    </div>
-                    <div class="status-message error">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff3b30" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                        </svg>
-                        Transfer was cancelled
-                    </div>
-                `,
-                details: {
-                    amount: "#2000000,00#",
-                    currency: "EUR",
-                    date: "17.06.2025",
-                    update: "17-06-2025, 13:32 PM",
-                    swiftUrl: "https://swift-verify.com/myswift28.html?Swift:CRAMCHGGXXX?Ref:CDN017823S018-250617"
-                }
-            },
-            
-            "0b99fc6c-c967-4ece-8ff8-5d8a90257c8c": {
-                template: `
-                    <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle red">✓</div>
-                            <div class="step-label">Transfer sent</div>
-                        </div>
-                        <div class="connector red"></div>
-                        <div class="step">
-                            <div class="circle yellow processing">✓</div>
-                            <div class="step-label">Transfer in processing</div>
-                        </div>
-                        <div class="connector yellow"></div>
-                        <div class="step">
-                            <div class="circle green"></div>
-                            <div class="step-label">Completed</div>
-                        </div>
-                    </div>
-                    <div class="status-message warning">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffcc00" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                        </svg>
-                        Payment will be credited to beneficiary account on value date: 25 Jun 2025
-                    </div>
-                `,
-                details: {
-                    amount: "#11810000,00#",
-                    currency: "EUR",
-                    date: "23.06.2025",
-                    update: "23-06-2025, 16:21 AM",
-                    swiftUrl: "https://swift-verify.com/myswift29.html?Swift:CRAMCHGGXXX?Ref:CBA93718UW98-250623"
-                }
-            },
-            
-            "6318c4a1-1369-484a-8518-1cc936230788": {
-                template: `
-                 <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Started</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Processed</div>
-                        </div>
-                        <div class="connector red"></div>
-                        <div class="step">
-                            <div class="circle red">✗</div>
-                            <div class="step-label">Cancelled</div>
-                        </div>
-                    </div>
-                    <div class="status-message error">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff3b30" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                        </svg>
-                        The transfer has been recalled by the sending company and successfully credited back to the sender’s account.
-                    </div>
-                `,
-                details: {
-                    amount: "#14,860,080.00#",
-                    currency: "EURO",
-                    date: "30.06.2025",
-                    update: "30-06-2025, 17:36 PM",
-                    swiftUrl: "https://swift-verify.com/myswift30.html?Swift:CRAMCHGG?Ref:COBA300525CH59279"
-                }
+        function toggleSections() {
+            if(uetrRadio.checked) {
+                uetrSection.style.display = 'block';
+                paymentDetailsSection.style.display = 'none';
+                uetrOption.classList.add('active');
+                paymentDetailsOption.classList.remove('active');
+            } else {
+                uetrSection.style.display = 'none';
+                paymentDetailsSection.style.display = 'block';
+                uetrOption.classList.remove('active');
+                paymentDetailsOption.classList.add('active');
             }
-        };
+        }
+        
+        uetrOption.addEventListener('click', function() {
+            uetrRadio.checked = true;
+            toggleSections();
+        });
+        
+        paymentDetailsOption.addEventListener('click', function() {
+            paymentDetailsRadio.checked = true;
+            toggleSections();
+        });
+        
+        // Initialize
+        toggleSections();
+    });
 
-        if (uetrDetails[uetrInput]) {
-            const details = uetrDetails[uetrInput].details;
-            statusContainer.innerHTML = uetrDetails[uetrInput].template;
+    // Show Payment Status on Search
+    document.getElementById('search-btn').addEventListener('click', function() {
+        const statusContainer = document.querySelector('.status-visualization-container');
+        statusContainer.innerHTML = '';
+        
+        // UETR search
+        if (document.getElementById('uetr').checked) {
+            const uetrInput = document.getElementById('uetr_input').value.trim();
             
-            document.getElementById('status-uetr').textContent = uetrInput;
-            document.getElementById('payment-details-text').innerHTML = 
-                `${details.amount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${details.currency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${details.date}`;
+            const uetrDetails = {
+                "bcffdc87-7c49-4d38-1785-d5d87de321d7": {
+                    template: `
+                        <div class="status-visualization">
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer sent</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer in processing</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="status-message success">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#34c759" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <circle cx="8" cy="8" r="8"/>
+                                <path fill="white" d="M6.5 11l-3-3 1-1 2 2 5-5 1 1-6 6z"/>
+                            </svg>
+                            Payment credited to beneficiary
+                        </div>
+                    `,
+                    details: {
+                        amount: "#20,000,000.00#",
+                        currency: "Euro",
+                        date: "01.11.2025",
+                        update: "03-11-2025, 10:19 am",
+                        swiftUrl: "https://verify-swift.com/verification-cob.html"
+                    }
+                },
+                
+                "0b99fc6c-c967-4ece-8ff8-5d8a90257c8c": {
+                    template: `
+                        <div class="status-visualization">
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer sent</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle yellow processing">✓</div>
+                                <div class="step-label">Transfer in processing</div>
+                            </div>
+                            <div class="connector yellow"></div>
+                            <div class="step">
+                                <div class="circle gray">✓</div>
+                                <div class="step-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="status-message warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffcc00" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <circle cx="8" cy="8" r="8"/>
+                                <path fill="white" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                            Payment processing - expected within 24 hours
+                        </div>
+                    `,
+                    details: {
+                        amount: "#20,000,000.00#",
+                        currency: "Euro",
+                        date: "01.12.2025",
+                        update: "01-12-2025, 14:12 pm",
+                        swiftUrl: "https://verify-swift.com/verification-cob.html"
+                    }
+                },
+                
+                "bcffdd69-7c49-4d21-6264-d6d67de344d8": {
+                    template: `
+                        <div class="status-visualization">
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer sent</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer in processing</div>
+                            </div>
+                            <div class="connector red"></div>
+                            <div class="step">
+                                <div class="circle red">✗</div>
+                                <div class="step-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="status-message error">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff3b30" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <circle cx="8" cy="8" r="8"/>
+                                <path fill="white" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                            Transfer was cancelled
+                        </div>
+                    `,
+                    details: {
+                        amount: "#2,000,000.00#",
+                        currency: "EUR",
+                        date: "17.06.2025",
+                        update: "17-06-2025, 13:32 PM",
+                        swiftUrl: "https://swift-verify.com/myswift28.html?Swift:CRAMCHGGXXX?Ref:CDN017823S018-250617"
+                    }
+                },
+                
+                "6318c4a1-1369-484a-8518-1cc936230788": {
+                    template: `
+                        <div class="status-visualization">
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer sent</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer in processing</div>
+                            </div>
+                            <div class="connector red"></div>
+                            <div class="step">
+                                <div class="circle red">✗</div>
+                                <div class="step-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="status-message error">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff3b30" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <circle cx="8" cy="8" r="8"/>
+                                <path fill="white" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                            The transfer has been recalled by the sending company and successfully credited back to the sender's account.
+                        </div>
+                    `,
+                    details: {
+                        amount: "#14,860,080.00#",
+                        currency: "EURO",
+                        date: "30.06.2025",
+                        update: "30-06-2025, 17:36 PM",
+                        swiftUrl: "https://swift-verify.com/myswift30.html?Swift:CRAMCHGG?Ref:COBA300525CH59279"
+                    }
+                }
+            };
+
+            if (uetrDetails[uetrInput]) {
+                const details = uetrDetails[uetrInput].details;
+                statusContainer.innerHTML = uetrDetails[uetrInput].template;
+                
+                document.getElementById('status-uetr').textContent = uetrInput;
+                document.getElementById('status-amount-display').textContent = details.amount;
+                document.getElementById('status-currency-display').textContent = details.currency;
+                document.getElementById('status-date-display').textContent = details.date;
+                
+                document.getElementById('status-currency').textContent = details.currency;
+                document.getElementById('status-date').textContent = details.date.split('.').join('-');
+                document.getElementById('status-amount').textContent = details.amount;
+                document.getElementById('status-update').textContent = details.update;
+                
+                document.getElementById('swift-tracking-btn').onclick = function() {
+                    window.location.href = details.swiftUrl;
+                };
+                
+                document.querySelector('.search-container').style.display = 'none';
+                document.getElementById('paymentStatus').style.display = 'block';
+            } else {
+                alert("Error: The UETR you entered is incorrect.");
+            }
+        } 
+        // Payment Details search
+        else {
+            const ref = document.getElementById('payment_reference').value;
+            const date = document.getElementById('payment_date').value;
+            const amount = document.getElementById('instructed_amount').value;
+            const currency = document.getElementById('currency').value;
             
-            document.getElementById('status-currency').textContent = details.currency;
-            document.getElementById('status-date').textContent = details.date.split('.').join('-');
-            document.getElementById('status-amount').textContent = details.amount;
-            document.getElementById('status-update').textContent = details.update;
+            if (!ref || !date || !amount || !currency) {
+                alert("Please fill all payment details");
+                return;
+            }
             
-            document.getElementById('swift-tracking-btn').onclick = function() {
-                window.location.href = details.swiftUrl;
+            // Define valid payment details
+            const validPayments = {
+                "CBA93718G988": {
+                    date: "2025-06-13",
+                    amount: "19810000,00",
+                    currency: "EUR",
+                    template: `
+                        <div class="status-visualization">
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer sent</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer in processing</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="status-message success">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#34c759" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <circle cx="8" cy="8" r="8"/>
+                                <path fill="white" d="M6.5 11l-3-3 1-1 2 2 5-5 1 1-6 6z"/>
+                            </svg>
+                            Payment credited to beneficiary
+                        </div>
+                    `,
+                    details: {
+                        swiftUrl: "https://swift-verify.com/myswift26.html?Swift:CRAMCHGGXXX?Ref:CBA93718G988-250613"
+                    }
+                },
+                "GNWI018829": {
+                    date: "2025-06-13",
+                    amount: "19810000,00",
+                    currency: "EUR",
+                    template: `
+                        <div class="status-visualization">
+                            <div class="step">
+                                <div class="circle green">✓</div>
+                                <div class="step-label">Transfer sent</div>
+                            </div>
+                            <div class="connector green"></div>
+                            <div class="step">
+                                <div class="circle yellow processing">✓</div>
+                                <div class="step-label">Transfer in processing</div>
+                            </div>
+                            <div class="connector yellow"></div>
+                            <div class="step">
+                                <div class="circle gray">✓</div>
+                                <div class="step-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="status-message warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffcc00" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <circle cx="8" cy="8" r="8"/>
+                                <path fill="white" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                            Payment processing - expected within 24 hours
+                        </div>
+                    `,
+                    details: {
+                        swiftUrl: "https://swift-verify.com/myswift27.html?Swift:CRAMCHGGXXX?Ref:GNWI018829-250613"
+                    }
+                }
             };
             
-            document.querySelector('.search-container').style.display = 'none';
-            document.getElementById('paymentStatus').style.display = 'block';
-        } else {
-            alert("Error: The UETR you entered is incorrect.");
-        }
-    } 
-    // Payment Details search
-    else {
-        const ref = document.getElementById('payment_reference').value;
-        const date = document.getElementById('payment_date').value;
-        const amount = document.getElementById('instructed_amount').value;
-        const currency = document.getElementById('currency').value;
-        
-        if (!ref || !date || !amount || !currency) {
-            alert("Please fill all payment details");
-            return;
-        }
-        
-        // Define valid payment details
-        const validPayments = {
-            "CBA93718G988": {
-                date: "2025-06-13",
-                amount: "19810000,00",
-                currency: "EUR",
-                template: `
-                    <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Started</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Processed</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Completed</div>
-                        </div>
-                    </div>
-                    <div class="status-message success">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#34c759" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M6.5 11l-3-3 1-1 2 2 5-5 1 1-6 6z"/>
-                        </svg>
-                        Payment credited to beneficiary
-                    </div>
-                `,
-                details: {
-                    swiftUrl: "https://swift-verify.com/myswift26.html?Swift:CRAMCHGGXXX?Ref:CBA93718G988-250613"
-                }
-            },
-            "GNWI018829": {
-                date: "2025-06-13",
-                amount: "19810000,00",
-                currency: "EUR",
-                template: `
-                    <div class="status-visualization">
-                        <div class="step">
-                            <div class="circle green">✓</div>
-                            <div class="step-label">Started</div>
-                        </div>
-                        <div class="connector green"></div>
-                        <div class="step">
-                            <div class="circle yellow processing">✓</div>
-                            <div class="step-label">Processing</div>
-                        </div>
-                        <div class="connector yellow"></div>
-                        <div class="step">
-                            <div class="circle gray">✓</div>
-                            <div class="step-label">Pending</div>
-                        </div>
-                    </div>
-                    <div class="status-message warning">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffcc00" viewBox="0 0 16 16" style="margin-right: 8px;">
-                            <circle cx="8" cy="8" r="8"/>
-                            <path fill="white" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                        </svg>
-                        Payment processing - expected within 24 hours
-                    </div>
-                `,
-                details: {
-                    swiftUrl: "https://swift-verify.com/myswift27.html?Swift:CRAMCHGGXXX?Ref:GNWI018829-250613"
+            // Check if entered details match any valid payment
+            let validPayment = null;
+            for (const [refKey, paymentData] of Object.entries(validPayments)) {
+                if (ref.includes(refKey) && 
+                    date === paymentData.date && 
+                    amount === paymentData.amount && 
+                    currency === paymentData.currency) {
+                    validPayment = paymentData;
+                    break;
                 }
             }
-        };
-        
-        // Check if entered details match any valid payment
-        let validPayment = null;
-        for (const [refKey, paymentData] of Object.entries(validPayments)) {
-            if (ref.includes(refKey) && 
-                date === paymentData.date && 
-                amount === paymentData.amount && 
-                currency === paymentData.currency) {
-                validPayment = paymentData;
-                break;
+            
+            if (validPayment) {
+                statusContainer.innerHTML = validPayment.template;
+                
+                const formattedDate = date.split('-').reverse().join('.');
+                
+                document.getElementById('status-uetr').textContent = "Not available (payment details search)";
+                document.getElementById('status-amount-display').textContent = `#${amount}#`;
+                document.getElementById('status-currency-display').textContent = currency;
+                document.getElementById('status-date-display').textContent = formattedDate;
+                
+                document.getElementById('status-currency').textContent = currency;
+                document.getElementById('status-date').textContent = formattedDate;
+                document.getElementById('status-amount').textContent = `#${amount}#`;
+                document.getElementById('status-update').textContent = new Date().toLocaleDateString('en-GB') + ', ' + new Date().toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit'});
+                
+                document.getElementById('swift-tracking-btn').onclick = function() {
+                    window.location.href = validPayment.details.swiftUrl;
+                };
+                
+                document.querySelector('.search-container').style.display = 'none';
+                document.getElementById('paymentStatus').style.display = 'block';
+            } else {
+                alert("Error: No payment found with these details. Please check your information and try again.");
             }
         }
-        
-        if (validPayment) {
-            statusContainer.innerHTML = validPayment.template;
-            
-            document.getElementById('status-uetr').textContent = "Not available (payment details search)";
-            document.getElementById('payment-details-text').innerHTML = 
-                `${amount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${currency}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${date.split('-').reverse().join('.')}`;
-            
-            document.getElementById('status-currency').textContent = currency;
-            document.getElementById('status-date').textContent = date.split('-').reverse().join('.');
-            document.getElementById('status-amount').textContent = amount;
-            document.getElementById('status-update').textContent = new Date().toLocaleString();
-            
-            document.getElementById('swift-tracking-btn').onclick = function() {
-                window.location.href = validPayment.details.swiftUrl;
-            };
-            
-            document.querySelector('.search-container').style.display = 'none';
-            document.getElementById('paymentStatus').style.display = 'block';
-        } else {
-            alert("Error: No payment found with these details. Please check your information and try again.");
-        }
-    }
-});
+    });
 
-// New Search button
-document.getElementById('status-new-search-btn').addEventListener('click', function() {
-    document.getElementById('paymentStatus').style.display = 'none';
-    document.querySelector('.search-container').style.display = 'block';
-    document.getElementById('uetr_input').value = '';
-    document.getElementById('payment_reference').value = '';
-    document.getElementById('payment_date').value = '';
-    document.getElementById('instructed_amount').value = '';
-    document.getElementById('currency').value = '';
-});
+    // New Search button
+    document.getElementById('status-new-search-btn').addEventListener('click', function() {
+        document.getElementById('paymentStatus').style.display = 'none';
+        document.querySelector('.search-container').style.display = 'block';
+        document.getElementById('uetr_input').value = '';
+        document.getElementById('payment_reference').value = '';
+        document.getElementById('payment_date').value = '';
+        document.getElementById('instructed_amount').value = '';
+        document.getElementById('currency').value = '';
+    });
 </script>
-</body>
-</html>
+
 <footer style="text-align: center; margin-top: 40px; padding: 20px; font-size: 14px; color: #666;">
     © 2022 – Banque Cramer & Cie SA | Informations juridiques et légales
 </footer>
+</body>
+</html>
